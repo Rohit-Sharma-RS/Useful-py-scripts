@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimized Image</title>
+</head>
+<body>
+    <h1>Optimized Image</h1>
+    <img src="{{ optimized_url }}" alt="Optimized Image">
+    <a href="/">Back to Home</a>
+</body>
+</html>

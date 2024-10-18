@@ -1,0 +1,57 @@
+from flask import Flask, render_template, request, redirect
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv("secret_env")
+
+app = Flask(__name__)
+
+# Cloudinary configuration
+cloudinary.config(
+    cloud_name="dm3golsxs",
+    api_key="579876256279641",
+    api_secret='L-koR6X_zSasEj9ygEJUf9JLyTs',
+    secure=True
+)
+
+@app.route("/", methods=["GET", "POST"])
+def index():
+    if request.method == "POST":
+        if "file" not in request.files:
+            return "No file uploaded"
+        file = request.files["file"]
+        
+        if file.filename == "":
+            return "No selected file"
+        
+        # Upload file to Cloudinary
+        upload_result = cloudinary.uploader.upload(file)
+        return render_template("index.html", upload_result=upload_result)
+    
+    return render_template("index.html")
+
+
+@app.route("/optimize/<public_id>")
+def optimize(public_id):
+    # Optimize image
+    optimized_url = cloudinary.CloudinaryImage(public_id).build_url(
+        fetch_format="auto", quality="auto"
+    )
+    return render_template("optimize.html", optimized_url=optimized_url)
+
+
+@app.route("/transform/<public_id>")
+def transform(public_id):
+    # Transform image
+    transform_url = cloudinary.CloudinaryImage(public_id).build_url(
+        width=500, height=500, crop="fill", gravity="auto"
+    )
+    return render_template("transform.html", transform_url=transform_url)
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

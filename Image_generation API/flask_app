@@ -6,30 +6,42 @@ import os
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-load_dotenv("secret_env")
+load_dotenv()
 
 app = Flask(__name__)
 
 # Cloudinary configuration
 cloudinary.config(
-    cloud_name="dm3golsxs",
-    api_key="579876256279641",
-    api_secret='L-koR6X_zSasEj9ygEJUf9JLyTs',
+    cloud_name=os.getenv('CLOUD_NAME'),
+    api_key=os.getenv('API_KEY'),
+    api_secret=os.getenv('API_SECRET'),
     secure=True
 )
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
+        # Check if a file is uploaded
         if "file" not in request.files:
             return "No file uploaded"
         file = request.files["file"]
         
         if file.filename == "":
             return "No selected file"
-        
+
+        prompt = request.form.get("prompt")
+
         # Upload file to Cloudinary
         upload_result = cloudinary.uploader.upload(file)
+
+        if prompt:
+            # Remove background based on prompt
+            remove_bg_url = cloudinary.CloudinaryImage(upload_result['public_id']).build_url(
+                effect=f"bgremoval:{prompt}",
+                crop="fill"
+            )
+            return render_template("index.html", upload_result=upload_result, remove_bg_url=remove_bg_url)
+        
         return render_template("index.html", upload_result=upload_result)
     
     return render_template("index.html")

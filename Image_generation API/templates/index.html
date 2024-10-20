@@ -11,7 +11,11 @@
     
     <form action="/" method="POST" enctype="multipart/form-data">
         <label for="file">Upload an image:</label>
-        <input type="file" name="file" id="file" required>
+        <input type="file" name="file" id="file" required><br><br>
+
+        <label for="prompt">Background Removal Prompt (e.g., 'remove white background'):</label>
+        <input type="text" name="prompt" id="prompt" placeholder="Describe the background removal"><br><br>
+
         <button type="submit">Upload</button>
     </form>
 
@@ -19,6 +23,12 @@
     <h2>Uploaded Image</h2>
     <img src="{{ upload_result['secure_url'] }}" alt="Uploaded Image" width="400">
     <p>URL: {{ upload_result['secure_url'] }}</p>
+    
+    {% if remove_bg_url %}
+    <h2>Background Removed Image</h2>
+    <img src="{{ remove_bg_url }}" alt="Background Removed Image" width="400">
+    <p>URL: {{ remove_bg_url }}</p>
+    {% endif %}
     
     <h2>Optimized Image</h2>
     <a href="/optimize/{{ upload_result['public_id'] }}">Click to see optimized version</a>

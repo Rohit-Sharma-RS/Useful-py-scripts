@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Image Background Replacement</title>
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light background for contrast */
+        }
+        .container {
+            background: white; /* White background for the form */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            padding: 20px; /* Padding inside the container */
+            margin-top: 50px; /* Margin from the top */
+        }
+        h1 {
+            color: #343a40; /* Darker title color */
+        }
+        h2 {
+            color: #007bff; /* Bootstrap primary color for headings */
+        }
+        .transformed-image {
+            max-width: 150%; /* Responsive width */
+            max-height: 550px; /* Limit the height to 400 pixels */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 8px; /* Rounded corners for the image */
+        }
+
+        .footer {
+            text-align: center; /* Centered footer */
+            margin-top: 20px; /* Space above footer */
+            font-size: 0.9em; /* Smaller font for footer */
+            color: #6c757d; /* Muted color for footer */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="text-center">Image Background Replacement</h1>
+    <form method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="image">Upload Image</label>
+            <input type="file" class="form-control" name="image" required>
+        </div>
+        <div class="form-group">
+            <label for="prompt">Background Prompt</label>
+            <input type="text" class="form-control" name="prompt" placeholder="e.g., Make the subject stand in a peaceful background" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+    </form>
+
+    {% if changed_image_url %}
+    <div class="mt-4 text-center">
+        <h2>Transformed Image:</h2>
+        <img src="{{ changed_image_url }}" class="transformed-image" alt="Transformed Image">
+        <p>
+            <a href="{{url_for('download_image', url=changed_image_url)}}" target="_blank" class="btn btn-success mt-3">Click here to download the transformed image</a>
+        </p>
+    </div>
+    {% endif %}
+</div>
+
+<div class="footer">
+    <p>Copyright &copy; 2024 Rohit Sharma. All Rights Reserved.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+import cv2
+import numpy as np
+import math
+from gesture import handDetector  # Use MediaPipe or custom detector
+import time
+
+# Initialize camera and hand detector
+cap = cv2.VideoCapture(0)
+detector = handDetector(detectionCon=1)
+
+# Variables to store the drawing status
+is_drawing = False
+drawn_points = []
+operator_detected = ""
+expression = ""
+
+while True:
+    # Capture frame
+    success, img = cap.read()
+    img = detector.findHands(img)
+    lmList = detector.findPosition(img, draw=False)
+
+    # Check if any hand is detected
+    if len(lmList) != 0:
+        # Get the index finger tip position (you can change to another finger if needed)
+        x1, y1 = lmList[8][1], lmList[8][2]
+
+        # Detect when the index finger is close to the screen (draw start gesture)
+        if lmList[8][2] < lmList[8 - 2][2]:  # Example condition to detect a "draw start"
+            is_drawing = True
+            drawn_points.append((x1, y1))  # Track drawing points
+
+        # Detect when the hand is open (draw stop gesture)
+        if lmList[8][2] > lmList[8 - 2][2] and is_drawing:
+            is_drawing = False
+
+            # Process the drawn points and recognize the shape or number
+            if len(drawn_points) > 10:  # Simple condition to avoid noise
+                shape_img = np.zeros((480, 640), dtype=np.uint8)  # Create a blank image
+                for point in drawn_points:
+                    cv2.circle(shape_img, point, 5, 255, cv2.FILLED)
+
+                # Recognize the drawn shape
+                # You can use contour matching, machine learning, or template matching here
+                detected_shape = recognize_shape(shape_img)
+
+                if detected_shape.isdigit():
+                    expression += detected_shape  # Add digit to expression
+                elif detected_shape in ["+", "-", "*", "/"]:
+                    expression += detected_shape  # Add operator to expression
+
+                # Clear the drawn points after recognition
+                drawn_points.clear()
+
+    # Draw the traced path while the user is drawing
+    if is_drawing:
+        for point in drawn_points:
+            cv2.circle(img, point, 5, (255, 0, 0), cv2.FILLED)
+
+    # Show the current expression on the screen
+    cv2.putText(img, expression, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+    # Display the camera feed
+    img = cv2.flip(img, 1)
+    cv2.imshow("Calculator", img)
+
+    # Exit on 'q' key press
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()

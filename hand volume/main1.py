@@ -23,9 +23,9 @@ plocX, plocY = 0, 0
 clocX, clocY = 0, 0
 
 cap = cv2.VideoCapture(0)
-cap.set(3, wCam)
-cap.set(4, hCam)
-detector = handDetector(detectionCon=1)
+cap.set(3, wCam)  # Set width of the camera
+cap.set(4, hCam)  # Set height of the camera
+detector = handDetector(detectionCon=0.75)
 
 LastPx = 800
 LastPy = 0
@@ -33,10 +33,10 @@ Percent = 0
 zoom_factor = 1.0
 
 while True:
-    success, img = cap.read()
+    success, img = cap.read()  # Read the camera frame
     img = detector.findHands(img, draw=True)
     lmList = detector.findPosition(img, draw=False)
-    tipId = [4, 8, 12, 16, 20]
+    tipId = [4, 8, 12, 16, 20] # Thumb, Index finger, middle finger, ring finger, pinky finger
 
     if len(lmList) != 0:
         fingers = []

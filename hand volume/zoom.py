@@ -2,19 +2,19 @@ import cv2
 import math
 import time
 from gesture import handDetector
-import pyautogui  # Library for simulating key presses
+import pyautogui
 
 # Camera dimensions
 wCam, hCam = 640, 480
 
 # Cooldown time between zoom actions (in seconds)
-zoom_cooldown = 1  # 1 second cooldown
+zoom_cooldown = 0.5 # Half a second cooldown
     
 # Set up video capture and hand detector
 cap = cv2.VideoCapture(0)
 cap.set(3, wCam)
 cap.set(4, hCam)
-detector = handDetector(detectionCon=1)
+detector = handDetector(detectionCon=0)
 
 # Time trackers for zoom cooldown
 last_zoom_in_time = time.time()

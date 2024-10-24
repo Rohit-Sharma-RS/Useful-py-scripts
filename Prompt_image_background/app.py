@@ -17,7 +17,7 @@ app.secret_key = os.urandom(24).hex()
 cloudinary.config( 
     cloud_name = "dm3golsxs", 
     api_key = "447258379524869", 
-    api_secret = os.environ.get("API_SECRET"), 
+    api_secret = '9aOg2R1NpIxXLre4Ag_r78pROjw', 
 )
 
 @app.route("/download", methods=["GET"])

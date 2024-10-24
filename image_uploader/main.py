@@ -1,7 +1,6 @@
 import os
 import requests
-import keyboard
-from PIL import ImageGrab
+from PIL import Image
 import io
 import base64
 from dotenv import load_dotenv
@@ -16,17 +15,13 @@ def upload_to_imgur(image_data):
     response = requests.post("https://api.imgur.com/3/image", headers=headers, data={"image": image_data})
     return response.json()
 
-def upload_image():
+def upload_image(file_path):
     try:
-        image = ImageGrab.grabclipboard()  
-        if image is None:
-            print("No image found in the clipboard.")
-            return
-        
-
-        with io.BytesIO() as output:
-            image.save(output, format='PNG')
-            image_data = base64.b64encode(output.getvalue()).decode()  # converted to base64
+        # Open the image from the provided file path
+        with Image.open(file_path) as image:
+            with io.BytesIO() as output:
+                image.save(output, format='PNG')
+                image_data = base64.b64encode(output.getvalue()).decode()  # Convert to base64
 
         # Upload the image to Imgur
         response = upload_to_imgur(image_data)
@@ -38,8 +33,6 @@ def upload_image():
     except Exception as e:
         print(f"An error occurred: {e}")
 
-
-keyboard.add_hotkey('ctrl+alt+s', upload_image)
-
-print("Listening for the shortcut... (Press ESC to stop)")
-keyboard.wait('esc')
+# Example usage
+file_path = input("Enter the full path of the image file you want to upload: ")
+upload_image(file_path)

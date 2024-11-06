@@ -1,4 +1,3 @@
-import numpy as np
 import cv2
 import math
 import time
@@ -26,7 +25,7 @@ cap = cv2.VideoCapture(0)
 cap.set(3, wCam)
 cap.set(4, hCam)
 detector = handDetector(detectionCon=0)
-
+detector = handDetector(detectionCon=1)
 Percent = 0
 
 while True:

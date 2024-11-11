@@ -22,6 +22,7 @@ detector = handDetector(detectionCon=0)
 
 # Mouse movement parameters
 smoothening = 7  # Higher values for more smoothing
+prev_hand_x, prev_hand_y = 0, 0
 prev_mouse_x, prev_mouse_y = 0, 0
 pTime = 0
 Percent = 0
@@ -84,16 +85,32 @@ while True:
         elif hand_type == "Left":
             # Mouse pointer movement with open hand
             if is_open_hand(fingers):
-                hand_x, hand_y = lmList[9][1], lmList[9][2]  # Middle finger as reference point
-                screen_width, screen_height = pyautogui.size()
-                mouse_x = np.interp(hand_x, [0, wCam], [0, screen_width])
-                mouse_y = np.interp(hand_y, [0, hCam], [0, screen_height])
+                # Use middle finger as a reference point for hand position
+                hand_x, hand_y = lmList[9][1], lmList[9][2]  
+                
+                # Calculate the direction of movement and scale it for faster response
+                direction_x = (prev_hand_x - hand_x) * 20  # Scale up the speed
+                direction_y = (hand_y - prev_hand_y) * 20  # Scale up the speed
 
-                # Smooth movement
+                # Get screen dimensions
+                screen_width, screen_height = pyautogui.size()
+                
+                # Calculate new mouse position
+                mouse_x = prev_mouse_x + direction_x
+                mouse_y = prev_mouse_y + direction_y
+
+                # Constrain the mouse position within the screen bounds
+                mouse_x = min(max(0, mouse_x), screen_width)
+                mouse_y = min(max(0, mouse_y), screen_height)
+
+                # Smooth the movement by gradually updating position
                 smooth_mouse_x = prev_mouse_x + (mouse_x - prev_mouse_x) / smoothening
                 smooth_mouse_y = prev_mouse_y + (mouse_y - prev_mouse_y) / smoothening
                 pyautogui.moveTo(smooth_mouse_x, smooth_mouse_y)
+
+                # Update previous positions
                 prev_mouse_x, prev_mouse_y = smooth_mouse_x, smooth_mouse_y
+                prev_hand_x, prev_hand_y = hand_x, hand_y
                 gesture_text = "Mouse Movement (Open Hand)"
 
             # Left hand mouse click with fist gesture

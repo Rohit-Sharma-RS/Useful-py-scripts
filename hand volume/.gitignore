@@ -1,2 +1,3 @@
 helper_functions.py
 __pycache__
+secrets.env

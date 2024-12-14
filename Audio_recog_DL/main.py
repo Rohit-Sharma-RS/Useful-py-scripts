@@ -6,6 +6,7 @@ import tensorflow_datasets as tfds
 # Load the trained model
 model = tf.keras.models.load_model("speech_commands_model.h5")
 
+# good work here
 # Define parameters
 DESIRED_SAMPLING_RATE = 16000  # 16kHz sampling rate
 DESIRED_TIME_SAMPLES = 124  # Time samples for spectrogram padding

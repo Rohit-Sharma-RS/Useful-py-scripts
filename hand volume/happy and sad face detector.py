@@ -12,22 +12,19 @@ from deepface import DeepFace
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow warnings
 
-# Set up audio control (PyCAW) for volume adjustment
 devices = AudioUtilities.GetSpeakers()
 interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
 volume = cast(interface, POINTER(IAudioEndpointVolume))
 
-# Camera dimensions
 wCam, hCam = 640, 480
 cap = cv2.VideoCapture(0)
 cap.set(3, wCam)
 cap.set(4, hCam)
 
-detector = handDetector(detectionCon=0)  # Higher detection confidence
+detector = handDetector(detectionCon=0)  
 smoothening = 7
 gesture_text = ""
 
-# Volume control parameters
 volRange = volume.GetVolumeRange()
 minVol = volRange[0]
 maxVol = volRange[1]
@@ -40,7 +37,6 @@ def is_victory_sign(fingers):
 def is_volume_control(fingers):
     return fingers == [0, 1, 0, 0, 1]
 
-# Emotion detection phase
 emotion_detected = False
 while not emotion_detected:
     success, frame = cap.read()
@@ -70,7 +66,6 @@ while not emotion_detected:
         break
 
 
-# Start gesture detection phase
 while True:
     success, img = cap.read()
     img = detector.findHands(img, draw=True)

@@ -21,6 +21,7 @@ def divide_image(image_path, output_folder):
             upper = row * block_height
             right = left + block_width
             lower = upper + block_height
+            high = lower - left
             
             # Crop the image
             cropped_image = img.crop((left, upper, right, lower))

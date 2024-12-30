@@ -1,6 +1,7 @@
 import os
 import platform
 
+
 def hide_folder(folder_path):
     """Hides the specified folder based on the operating system."""
     if platform.system() == "Windows":

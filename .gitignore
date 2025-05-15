@@ -3,3 +3,6 @@
 *.avi
 smarter.py
 smarter2.py
+*.mp3
+*.wav
+*.txt

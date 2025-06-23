@@ -7,13 +7,13 @@ def download_torrent(torrent_source):
         # If it's a torrent file
         cmd = ['webtorrent', 'download', torrent_source, '--out', './downloads']
     else:
-        # Assume it's a magnet link
+        # If god forbids it's a magnet link
         cmd = ['webtorrent', 'download', torrent_source, '--out', './downloads']
     
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     for line in process.stdout:
         print(line.decode(), end='')
 
-# Ask user for input
+# Ask user for input ofc
 torrent_source = input('Enter magnet link or path to .torrent file: ')
 download_torrent(torrent_source)
